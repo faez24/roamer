@@ -6,6 +6,56 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* iPhone 17 Pro Max Orange */
+    --color-primary: #FF4F00;
+    --color-primary-light: #FF7A33;
+    --color-primary-dark: #D94300;
+}
+
+/* Safe area for notched devices */
+.safe-area-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Better touch targets on mobile */
+@media (max-width: 640px) {
+    button, a {
+        -webkit-touch-callout: none;
+    }
+}
+
+/* Infinite ticker animation */
+@keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+    animation: ticker 40s linear infinite;
+}
+
+.ticker-track:hover {
+    animation-play-state: paused;
+}
+
+/* Subtle background patterns */
+.bg-dots {
+    background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.bg-grid {
+    background-image:
+        linear-gradient(to right, #f3f4f6 1px, transparent 1px),
+        linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
+    background-size: 48px 48px;
 }
