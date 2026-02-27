@@ -55,11 +55,7 @@
         }
 
         .ticker-track {
-            animation: ticker 40s linear infinite;
-        }
-
-        .ticker-track:hover {
-            animation-play-state: paused;
+            animation: ticker 18s linear infinite;
         }
 
         /* Hide scrollbar for horizontal scroll */
