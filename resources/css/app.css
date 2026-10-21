@@ -32,6 +32,8 @@
 }
 
 html {
+    /* keeps the width the same while the intro locks scrolling, so the page does not jump when it ends */
+    scrollbar-gutter: stable;
     scroll-behavior: smooth;
     scroll-padding-top: 4.5rem;
     -webkit-tap-highlight-color: transparent;
