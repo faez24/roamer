@@ -3,7 +3,8 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
-@source '../**/*.js';
+@source '../**/*.jsx';
+@source '../../app/Http/Controllers/*.php';
 
 @theme {
     --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -58,4 +59,14 @@ html {
         linear-gradient(to right, #f3f4f6 1px, transparent 1px),
         linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
     background-size: 48px 48px;
+}
+
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
 }
