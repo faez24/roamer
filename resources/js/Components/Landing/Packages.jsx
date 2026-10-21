@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ArrowRightIcon, ChevronDownIcon, LongArrowRightIcon } from '../Icons';
-import SectionHeading from '../SectionHeading';
+import { CITY_CODE, REGION_CODE } from '../../lib/airports';
+import useInView from '../../lib/useInView';
 
 const TABS = {
     all: 'Semua Destinasi',
@@ -11,56 +11,72 @@ const TABS = {
 
 const PAGE_SIZE = 5;
 
-function PackageCard({ pkg }) {
-    const isRegional = pkg.type === 'eSIM Regional';
-    const extra = pkg.codes.length - 5;
+// City codes printed under the name: one city, up to three cities, or the region.
+function routeLabel(pkg) {
+    const { codes, region } = pkg;
+    if (codes.length > 3) return `${REGION_CODE[region] ?? region.toUpperCase()} · ${codes.length}+ negara`;
+    return codes.map((c) => CITY_CODE[c] ?? c.toUpperCase()).join(' · ');
+}
+
+function Flags({ codes }) {
+    if (codes.length === 1) {
+        return (
+            <img
+                src={`https://flagcdn.com/w80/${codes[0]}.png`}
+                alt=""
+                width="44"
+                height="32"
+                loading="lazy"
+                decoding="async"
+                className="w-11 h-8 rounded-[4px] object-cover ring-1 ring-midnight/10 shrink-0"
+            />
+        );
+    }
 
     return (
-        <a href="#" className="group block relative">
-            <div className="relative overflow-hidden rounded-t-2xl h-24 sm:h-28">
-                {pkg.codes.length === 1 ? (
-                    <img src={`https://flagcdn.com/w320/${pkg.codes[0]}.png`} alt={pkg.label} className="w-full h-full object-cover" />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-                        <div className="flex items-center -space-x-2">
-                            {pkg.codes.slice(0, 5).map((code, i) => (
-                                <div
-                                    key={code}
-                                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-white/20 shadow-lg ring-1 ring-black/10 relative"
-                                    style={{ zIndex: 10 - i }}
-                                >
-                                    <img src={`https://flagcdn.com/w80/${code}.png`} alt={code} className="w-full h-full object-cover" />
-                                </div>
-                            ))}
-                            {extra > 0 && (
-                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center relative" style={{ zIndex: 1 }}>
-                                    <span className="text-[10px] font-bold text-white">+{extra}</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
-                <span
-                    className={`absolute top-2.5 right-2.5 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold tracking-wide text-white ${
-                        isRegional ? 'bg-violet-500/90' : 'bg-emerald-500/90'
-                    }`}
-                >
-                    {pkg.type}
-                </span>
-                <h3 className="absolute bottom-2.5 left-3 right-3 text-sm sm:text-base font-bold text-white drop-shadow-md truncate">{pkg.label}</h3>
+        <span className="flex -space-x-2.5 shrink-0" aria-hidden="true">
+            {codes.slice(0, 3).map((c, i) => (
+                <img
+                    key={c}
+                    src={`https://flagcdn.com/w80/${c}.png`}
+                    alt=""
+                    width="32"
+                    height="32"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-8 h-8 rounded-full object-cover ring-2 ring-white"
+                    style={{ zIndex: 3 - i }}
+                />
+            ))}
+        </span>
+    );
+}
+
+function PackageRow({ pkg, index }) {
+    const [ref, inView] = useInView({ rootMargin: '0px 0px -40px 0px' });
+    const isRegional = pkg.type === 'eSIM Regional';
+
+    return (
+        <li
+            ref={ref}
+            className={`reveal ${inView ? 'is-in' : ''} flex items-center gap-4 sm:gap-6 border-t border-hairline py-5 sm:py-6`}
+            style={{ '--i': index % 6 }}
+        >
+            <Flags codes={pkg.codes} />
+
+            <div className="min-w-0 flex-1">
+                <h3 className="t-display text-[1.3rem] sm:text-[1.7rem] leading-[1.1]">{pkg.label}</h3>
+                <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-mute">
+                    <span className="tabular-nums">{routeLabel(pkg)}</span>
+                    <span className={isRegional ? 'px-2 py-0.5 rounded-sm bg-midnight text-white text-xs font-medium' : 'text-xs'}>{pkg.type}</span>
+                </p>
             </div>
-            <div className="bg-white border border-t-0 border-gray-200/80 rounded-b-2xl px-3.5 py-3 sm:px-4 sm:py-3.5 group-hover:border-primary/30 transition-colors">
-                <p className="text-[10px] sm:text-[11px] text-gray-400 mb-0.5">Mulai dari</p>
-                <div className="flex items-baseline justify-between">
-                    <span className="text-base sm:text-lg font-extrabold text-gray-900">Rp {pkg.start}</span>
-                    <span className="text-primary text-xs font-semibold opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 flex items-center gap-0.5">
-                        Lihat
-                        <ArrowRightIcon className="w-3 h-3" />
-                    </span>
-                </div>
+
+            <div className="text-right shrink-0">
+                <p className="text-sm text-mute">Mulai dari</p>
+                <p className="t-display text-[1.45rem] sm:text-[2rem] tabular-nums">Rp {pkg.start}</p>
             </div>
-        </a>
+        </li>
     );
 }
 
@@ -71,7 +87,6 @@ export default function Packages({ packages }) {
     const filtered = tab === 'all' ? packages : packages.filter((p) => p.region === tab);
     const visible = filtered.slice(0, limit);
     const remaining = filtered.length - limit;
-    const ctaLabel = tab === 'all' ? 'Lihat semua destinasi' : `Lihat paket ${TABS[tab]}`;
 
     const switchTab = (key) => {
         setTab(key);
@@ -79,59 +94,50 @@ export default function Packages({ packages }) {
     };
 
     return (
-        <section id="paket" className="py-16 sm:py-24 lg:py-28 bg-gray-50 relative overflow-hidden">
-            <div className="relative max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-10 sm:mb-14">
-                    <SectionHeading
-                        label="Paket Data"
-                        title="Destinasi populer"
-                        description="Pilih negara tujuan, bayar, dan langsung online. Semudah itu."
-                    />
+        <section id="paket" className="bg-white pt-20 pb-24 sm:pt-28 sm:pb-32">
+            <div className="max-w-[88rem] mx-auto px-5 sm:px-8">
+                <div className="lg:grid lg:grid-cols-[5fr_7fr] lg:gap-16">
+                    <div className="mb-10 lg:mb-0 lg:sticky lg:top-28 lg:self-start">
+                        <h2 className="t-display text-[clamp(2.5rem,5.2vw,4.75rem)]">Destinasi populer</h2>
+                        <p className="mt-5 text-lg text-mute leading-relaxed max-w-sm">Pilih negara tujuan, bayar, dan langsung online. Semudah itu.</p>
 
-                    <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 shrink-0 self-start sm:self-auto shadow-sm">
-                        {Object.entries(TABS).map(([key, label]) => (
-                            <button
-                                key={key}
-                                type="button"
-                                onClick={() => switchTab(key)}
-                                className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
-                                    tab === key ? 'bg-primary text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'
-                                }`}
-                            >
-                                {label}
-                            </button>
-                        ))}
+                        <div role="group" aria-label="Pilih wilayah" className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+                            {Object.entries(TABS).map(([key, label]) => (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    aria-pressed={tab === key}
+                                    onClick={() => switchTab(key)}
+                                    className={`pb-1 text-[17px] border-b-2 transition-colors cursor-pointer ${
+                                        tab === key ? 'border-primary text-midnight font-medium' : 'border-transparent text-mute hover:text-midnight'
+                                    }`}
+                                >
+                                    {label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                    {visible.map((pkg) => (
-                        <PackageCard key={pkg.id} pkg={pkg} />
-                    ))}
-                </div>
+                    <div>
+                        <ul key={tab} className="border-b border-hairline">
+                            {visible.map((pkg, i) => (
+                                <PackageRow key={pkg.id} pkg={pkg} index={i} />
+                            ))}
+                        </ul>
 
-                {remaining > 0 && (
-                    <div className="mt-6 sm:mt-8 text-center">
-                        <button
-                            type="button"
-                            onClick={() => setLimit((l) => l + PAGE_SIZE)}
-                            className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-gray-200 text-sm font-semibold text-gray-700 rounded-xl hover:border-primary/30 hover:text-primary transition-all cursor-pointer shadow-sm"
-                        >
-                            <span>Lihat lainnya</span>
-                            <span className="text-xs text-gray-400 font-normal">({remaining} lagi)</span>
-                            <ChevronDownIcon className="w-4 h-4" />
-                        </button>
+                        <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-[17px]">
+                            {remaining > 0 && (
+                                <button type="button" onClick={() => setLimit((l) => l + PAGE_SIZE)} className="link-line cursor-pointer">
+                                    Lihat lainnya ({remaining} lagi)
+                                </button>
+                            )}
+                            {tab !== 'all' && (
+                                <button type="button" onClick={() => switchTab('all')} className="link-line cursor-pointer">
+                                    Lihat semua destinasi
+                                </button>
+                            )}
+                        </div>
                     </div>
-                )}
-
-                <div className="mt-10 sm:mt-14 text-center">
-                    <button
-                        type="button"
-                        className="inline-flex items-center gap-2.5 px-7 py-3 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer shadow-lg shadow-primary/20"
-                    >
-                        <span>{ctaLabel}</span>
-                        <LongArrowRightIcon className="w-4 h-4" />
-                    </button>
                 </div>
             </div>
         </section>

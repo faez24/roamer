@@ -7,61 +7,57 @@
 @source '../../app/Http/Controllers/*.php';
 
 @theme {
-    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* iPhone 17 Pro Max Orange */
     --color-primary: #FF4F00;
     --color-primary-light: #FF7A33;
     --color-primary-dark: #D94300;
+    /* orange tuned for text on light backgrounds (AA) */
+    --color-primary-ink: #C23C00;
+
+    --color-midnight: #0D2236;
+    --color-midnight-2: #153350;
+    --color-chart: #2C5F7C;
+    --color-mist: #F3F5F7;
+    --color-hairline: #D6DCE2;
+    /* kuotaumroh.id brand: emerald on mint */
+    --color-kuota: #047857;
+    --color-kuota-deep: #064E3B;
+    --color-kuota-bright: #10B77F;
+    --color-kuota-mint: #E6F6EF;
+    --color-mute: #5F6B76;
 }
 
-/* Safe area for notched devices */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background: #fff;
+    color: var(--color-midnight);
+}
+
+:focus-visible {
+    /* two-tone ring: readable on both dark and light backgrounds */
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px var(--color-midnight);
+}
+
+input[role='combobox']:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
 .safe-area-bottom {
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
-/* Smooth scrolling */
-html {
-    scroll-behavior: smooth;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Better touch targets on mobile */
-@media (max-width: 640px) {
-    button, a {
-        -webkit-touch-callout: none;
-    }
-}
-
-/* Infinite ticker animation */
-@keyframes ticker {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.ticker-track {
-    animation: ticker 40s linear infinite;
-}
-
-.ticker-track:hover {
-    animation-play-state: paused;
-}
-
-/* Subtle background patterns */
-.bg-dots {
-    background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
-    background-size: 24px 24px;
-}
-
-.bg-grid {
-    background-image:
-        linear-gradient(to right, #f3f4f6 1px, transparent 1px),
-        linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
-    background-size: 48px 48px;
-}
-
-/* Hide scrollbar for horizontal scroll */
 .scrollbar-hide {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -69,4 +65,146 @@ html {
 
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
+}
+
+/* First-visit intro: the page waits (playing), starts arriving (landing), then is normal (done) */
+html[data-intro='playing'],
+html[data-intro='landing'] {
+    overflow: hidden;
+}
+
+html[data-intro='playing'] .hero-line > span,
+html[data-intro='playing'] .ribbon-fade,
+html[data-intro='playing'] .hero-fade {
+    animation-play-state: paused;
+}
+
+html[data-intro='playing'] #nav-mark,
+html[data-intro='landing'] #nav-mark {
+    visibility: hidden;
+}
+
+.nav-reveal {
+    transition: opacity 0.7s ease 0.1s;
+}
+
+html[data-intro='playing'] .nav-reveal {
+    opacity: 0;
+}
+
+/* Display type: medium weight, tight tracking */
+.t-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1;
+}
+
+/* Underlined text link used for secondary actions */
+.link-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid currentColor;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.link-line:hover {
+    color: var(--color-primary-ink);
+}
+
+/* Big country names, two rows moving in opposite directions */
+@keyframes board {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+@keyframes board-rev {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+}
+
+.board-track {
+    animation: board 70s linear infinite;
+}
+
+.board-track-rev {
+    animation: board-rev 80s linear infinite;
+}
+
+/* Hero: the slogan rises line by line while the ribbon fades in */
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes rise {
+    from { transform: translateY(110%); }
+    to { transform: translateY(0); }
+}
+
+.hero-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+}
+
+.hero-line > span {
+    display: block;
+    animation: rise 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 130ms + 150ms);
+}
+
+.hero-fade {
+    animation: fade-in 1s ease-out both;
+    animation-delay: var(--d, 600ms);
+}
+
+.ribbon-fade {
+    animation: fade-in 2s ease-out 0.2s both;
+}
+
+@keyframes quote-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+}
+
+.quote-in {
+    animation: quote-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Scroll reveal, used only on list rows and testimonials */
+.reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+
+    .board-track,
+    .board-track-rev,
+    .hero-line > span,
+    .ribbon-fade,
+    .hero-fade {
+        animation: none;
+    }
+
+    .quote-in {
+        animation: none;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }

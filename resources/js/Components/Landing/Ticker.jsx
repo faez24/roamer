@@ -1,24 +1,34 @@
-export default function Ticker({ countries }) {
+import { CITY_CODE } from '../../lib/airports';
+
+// Two rows of big country names drifting in opposite directions.
+function Row({ countries, reverse = false, decorative = false }) {
     return (
-        <div className="border-y border-orange-100/60 bg-gradient-to-r from-orange-50/40 via-white to-orange-50/40 py-3.5 sm:py-4">
-            <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 overflow-hidden">
-                <div className="ticker-track flex items-center gap-8 sm:gap-12 whitespace-nowrap">
-                    {[0, 1].map((copy) => (
-                        <div key={copy} className="flex items-center gap-6 sm:gap-10 shrink-0" aria-hidden={copy === 1}>
-                            {countries.map((country) => (
-                                <span key={country.code} className="inline-flex items-center gap-2 text-[13px] text-gray-400 font-medium">
-                                    <img
-                                        src={`https://flagcdn.com/w40/${country.code}.png`}
-                                        alt={country.code.toUpperCase()}
-                                        className="w-5 h-3.5 rounded-[2px] object-cover"
-                                    />
-                                    {country.name}
+        <div className="overflow-hidden">
+            <div className={`${reverse ? 'board-track-rev' : 'board-track'} flex w-max items-baseline`}>
+                {[0, 1].map((copy) => (
+                    <ul key={copy} className="flex items-baseline shrink-0" aria-hidden={decorative || copy === 1 ? true : undefined}>
+                        {countries.map((country) => (
+                            <li key={country.code} className="flex items-baseline gap-2 pr-10 sm:pr-16 whitespace-nowrap">
+                                <span className="t-display text-[clamp(2.6rem,6.5vw,5.75rem)] text-[#7C8995]">{country.name}</span>
+                                <span className="text-sm font-medium text-primary-ink tabular-nums">
+                                    {CITY_CODE[country.code] ?? country.code.toUpperCase()}
                                 </span>
-                            ))}
-                        </div>
-                    ))}
-                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ))}
             </div>
         </div>
+    );
+}
+
+export default function Ticker({ countries }) {
+    const shifted = [...countries.slice(7), ...countries.slice(0, 7)].reverse();
+
+    return (
+        <section aria-label="Negara tujuan yang tersedia" className="border-y border-hairline py-8 sm:py-12 space-y-2 sm:space-y-4">
+            <Row countries={countries} />
+            <Row countries={shifted} reverse decorative />
+        </section>
     );
 }

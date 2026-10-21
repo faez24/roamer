@@ -1,65 +1,95 @@
-import { useEffect, useState } from 'react';
-import { CloseIcon, GlobeIcon, MenuIcon } from '../Icons';
+import { useEffect, useRef, useState } from 'react';
+import { CloseIcon, MenuIcon } from '../Icons';
+import { PlaneMark } from './Logo';
+
+const links = [
+    { label: 'Paket Data', href: '#paket' },
+    { label: 'FAQ', href: '#faq' },
+];
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const menuButtonRef = useRef(null);
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 60);
+        const onScroll = () => setScrolled(window.scrollY > 40);
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
+    useEffect(() => {
+        if (!menuOpen) return undefined;
+        const onKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                setMenuOpen(false);
+                menuButtonRef.current?.focus();
+            }
+        };
+        document.addEventListener('keydown', onKeyDown);
+        return () => document.removeEventListener('keydown', onKeyDown);
+    }, [menuOpen]);
+
     return (
-        <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm' : 'bg-transparent'
+        <header
+            className={`fixed top-0 left-0 right-0 z-50 text-midnight transition-colors duration-300 ${
+                scrolled || menuOpen ? 'bg-white/95 backdrop-blur border-b border-hairline' : 'bg-transparent border-b border-transparent'
             }`}
         >
-            <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    <a href="#" className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                            <GlobeIcon className="w-[18px] h-[18px] text-white" />
-                        </div>
-                        <span className="text-lg font-bold tracking-tight">
-                            Roamer<span className="text-primary">.id</span>
-                        </span>
-                    </a>
-
-                    <div className="hidden md:flex items-center gap-8">
-                        <a href="#paket" className="text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors">Paket Data</a>
-                        <a href="#faq" className="text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors">FAQ</a>
-                        <a href="#paket" className="inline-flex items-center px-5 py-2 bg-gray-900 text-white text-[13px] font-semibold rounded-lg hover:bg-gray-800 transition-colors">
-                            Beli Sekarang
+            <nav aria-label="Utama">
+                <div className="max-w-[88rem] mx-auto px-5 sm:px-8">
+                    <div className="flex items-center justify-between h-16 sm:h-[4.5rem]">
+                        <a href="#beranda" className="flex items-center gap-2 text-[1.4rem] font-bold tracking-[-0.04em]">
+                            <PlaneMark id="nav-mark" className="w-6 h-6 text-primary" />
+                            <span className="nav-reveal">
+                                Roamer<span className="text-primary">.id</span>
+                            </span>
                         </a>
+
+                        <div className="nav-reveal hidden md:flex items-center gap-9">
+                            {links.map((link) => (
+                                <a key={link.href} href={link.href} className="text-[15px] text-midnight/80 hover:text-midnight transition-colors">
+                                    {link.label}
+                                </a>
+                            ))}
+                            <a
+                                href="#paket"
+                                className="inline-flex items-center px-5 py-2.5 bg-primary text-midnight text-[15px] font-semibold rounded-full hover:bg-primary-light transition-colors"
+                            >
+                                Beli Sekarang
+                            </a>
+                        </div>
+
+                        <button
+                            ref={menuButtonRef}
+                            type="button"
+                            className="nav-reveal md:hidden p-2 -mr-2"
+                            aria-label="Menu"
+                            aria-expanded={menuOpen}
+                            aria-controls="menu-mobile"
+                            onClick={() => setMenuOpen((open) => !open)}
+                        >
+                            {menuOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+                        </button>
                     </div>
-
-                    <button
-                        type="button"
-                        className="md:hidden p-2 -mr-2"
-                        aria-label="Menu"
-                        aria-expanded={menuOpen}
-                        onClick={() => setMenuOpen((open) => !open)}
-                    >
-                        {menuOpen ? <CloseIcon className="w-5 h-5 text-gray-700" /> : <MenuIcon className="w-5 h-5 text-gray-700" />}
-                    </button>
                 </div>
-            </div>
 
-            {menuOpen && (
-                <div className="md:hidden border-t border-gray-100 bg-white" onClick={() => setMenuOpen(false)}>
-                    <div className="px-5 py-4 space-y-1">
-                        <a href="#paket" className="block px-3 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">Paket Data</a>
-                        <a href="#faq" className="block px-3 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">FAQ</a>
-                        <div className="pt-2">
-                            <a href="#paket" className="block text-center px-5 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-lg">Beli Sekarang</a>
+                {menuOpen && (
+                    <div id="menu-mobile" className="md:hidden bg-white border-t border-hairline" onClick={() => setMenuOpen(false)}>
+                        <div className="px-5 py-5">
+                            {links.map((link) => (
+                                <a key={link.href} href={link.href} className="block py-4 text-3xl t-display border-b border-hairline">
+                                    {link.label}
+                                </a>
+                            ))}
+                            <a href="#paket" className="mt-6 block text-center px-5 py-3.5 bg-primary text-midnight text-base font-semibold rounded-full">
+                                Beli Sekarang
+                            </a>
                         </div>
                     </div>
-                </div>
-            )}
-        </nav>
+                )}
+            </nav>
+        </header>
     );
 }

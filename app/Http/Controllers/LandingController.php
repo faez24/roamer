@@ -69,10 +69,10 @@ class LandingController extends Controller
                 ['id' => 'latam', 'label' => 'Amerika Latin 5 Negara', 'codes' => ['mx', 'br', 'ar', 'cl', 'co'], 'region' => 'amerika', 'type' => 'eSIM Regional', 'start' => '28.000'],
             ],
             'testimonials' => [
-                ['code' => 'jp', 'country' => 'Jepang', 'quote' => 'Internet lancar banget di Tokyo, streaming & maps jalan terus!', 'name' => 'Andi Rahmat', 'initials' => 'AR', 'plan' => 'eSIM Jepang 5GB', 'gradient' => 'from-sky-400 to-blue-600'],
-                ['code' => 'kr', 'country' => 'Korea', 'quote' => 'Aktivasi cuma 2 menit! Sampai Incheon langsung bisa pakai.', 'name' => 'Dina Safira', 'initials' => 'DS', 'plan' => 'eSIM Korea 3GB', 'gradient' => 'from-rose-400 to-pink-600'],
-                ['code' => 'th', 'country' => 'Thailand', 'quote' => 'Dari Bangkok sampe Chiang Mai sinyal stabil. Recommended!', 'name' => 'Bayu Wicaksono', 'initials' => 'BW', 'plan' => 'eSIM Thailand 10GB', 'gradient' => 'from-amber-400 to-orange-600'],
-                ['code' => 'sg', 'country' => 'Singapura', 'quote' => 'Harga paling murah dibanding beli SIM di bandara. Worth it!', 'name' => 'Nadia Putri', 'initials' => 'NP', 'plan' => 'eSIM Singapura 3GB', 'gradient' => 'from-emerald-400 to-teal-600'],
+                ['code' => 'jp', 'country' => 'Jepang', 'quote' => 'Internet lancar banget di Tokyo, streaming & maps jalan terus!', 'name' => 'Andi Rahmat', 'youtube' => 'ctGnQcYGBIY', 'initials' => 'AR', 'plan' => 'eSIM Jepang 5GB', 'gradient' => 'from-sky-400 to-blue-600'],
+                ['code' => 'kr', 'country' => 'Korea', 'quote' => 'Aktivasi cuma 2 menit! Sampai Incheon langsung bisa pakai.', 'name' => 'Dina Safira', 'youtube' => '_5_0K9mWICU', 'initials' => 'DS', 'plan' => 'eSIM Korea 3GB', 'gradient' => 'from-rose-400 to-pink-600'],
+                ['code' => 'th', 'country' => 'Thailand', 'quote' => 'Dari Bangkok sampe Chiang Mai sinyal stabil. Recommended!', 'name' => 'Bayu Wicaksono', 'youtube' => 'ZCGJrOaAjTU', 'initials' => 'BW', 'plan' => 'eSIM Thailand 10GB', 'gradient' => 'from-amber-400 to-orange-600'],
+                ['code' => 'sg', 'country' => 'Singapura', 'quote' => 'Harga paling murah dibanding beli SIM di bandara. Worth it!', 'name' => 'Nadia Putri', 'youtube' => 'NGTqxDgmoTM', 'initials' => 'NP', 'plan' => 'eSIM Singapura 3GB', 'gradient' => 'from-emerald-400 to-teal-600'],
             ],
             'faqs' => [
                 ['q' => 'Apa itu Roamer.id dan bagaimana cara kerjanya?', 'a' => 'Roamer.id adalah platform penjualan paket data internasional (eSIM) yang memungkinkan Anda tetap terhubung ke internet saat bepergian ke luar negeri. Cukup pilih negara tujuan, beli paket, dan scan QR code untuk mengaktifkan eSIM — tanpa perlu ganti kartu SIM fisik!'],

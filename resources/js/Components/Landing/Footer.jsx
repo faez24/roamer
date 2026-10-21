@@ -1,77 +1,78 @@
-import { GlobeIcon } from '../Icons';
-
-const linkClass = 'text-sm text-gray-500 hover:text-white transition-colors';
-
 const navigation = [
-    { label: 'Beranda', href: '#' },
+    { label: 'Beranda', href: '#beranda' },
     { label: 'Paket Data', href: '#paket' },
     { label: 'FAQ', href: '#faq' },
-    { label: 'Tentang Kami', href: '#' },
+    { label: 'Tentang Kami', href: null },
 ];
 
 const destinations = ['Jepang', 'Korea Selatan', 'Thailand', 'Singapura', 'Amerika Serikat'];
 
 const contacts = ['hello@roamer.id', '+62 812 3456 7890', 'Jakarta, Indonesia'];
 
-function Column({ title, children }) {
+function Plane({ className }) {
     return (
-        <div>
-            <h4 className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-4">{title}</h4>
-            <ul className="space-y-2.5">{children}</ul>
-        </div>
+        <svg viewBox="-16 -14 32 28" className={className} fill="currentColor" aria-hidden="true">
+            <path d="M14 0 L4 -3 L-1 -12 L-5 -12 L-3 -3 L-9 -2 L-12 -6 L-14 -6 L-12 0 L-14 6 L-12 6 L-9 2 L-3 3 L-5 12 L-1 12 L4 3 Z" transform="rotate(-90)" />
+        </svg>
     );
 }
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-900 text-gray-400 pb-20 sm:pb-0">
-            <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-16">
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-                    <div className="col-span-2 lg:col-span-1">
-                        <a href="#" className="flex items-center gap-2.5 mb-4">
-                            <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
-                                <GlobeIcon className="w-4 h-4 text-white" />
-                            </div>
-                            <span className="text-base font-bold text-white">
-                                Roamer<span className="text-primary">.id</span>
-                            </span>
-                        </a>
-                        <p className="text-xs sm:text-sm leading-relaxed text-gray-500">
-                            Paket data internasional terjangkau. Tetap terhubung di mana pun Anda berada.
-                        </p>
+        <footer className="bg-white border-t border-hairline pb-24 sm:pb-0">
+            <div className="max-w-[88rem] mx-auto px-5 sm:px-8 pt-14 sm:pt-20">
+                <div className="grid gap-12 lg:grid-cols-[5fr_7fr] lg:gap-16">
+                    <div>
+                        <h2 className="sr-only">Navigasi</h2>
+                        <ul className="space-y-1">
+                            {navigation.map((item) => (
+                                <li key={item.label}>
+                                    {item.href ? (
+                                        <a href={item.href} className="t-display text-[2rem] sm:text-[2.4rem] leading-[1.15] hover:text-primary-ink transition-colors">
+                                            {item.label}
+                                        </a>
+                                    ) : (
+                                        <span className="t-display text-[2rem] sm:text-[2.4rem] leading-[1.15] text-mute">{item.label}</span>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
-                    <Column title="Navigasi">
-                        {navigation.map((item) => (
-                            <li key={item.label}>
-                                <a href={item.href} className={linkClass}>{item.label}</a>
-                            </li>
-                        ))}
-                    </Column>
-
-                    <Column title="Destinasi">
-                        {destinations.map((name) => (
-                            <li key={name}>
-                                <a href="#" className={linkClass}>{name}</a>
-                            </li>
-                        ))}
-                    </Column>
-
-                    <Column title="Kontak">
-                        {contacts.map((line) => (
-                            <li key={line} className="text-sm text-gray-500">{line}</li>
-                        ))}
-                    </Column>
-                </div>
-
-                <div className="border-t border-gray-800 mt-10 pt-6">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <p className="text-xs text-gray-600">&copy; {new Date().getFullYear()} Roamer.id. Semua hak dilindungi.</p>
-                        <div className="flex items-center gap-5">
-                            <a href="#" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Kebijakan Privasi</a>
-                            <a href="#" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Syarat &amp; Ketentuan</a>
+                    <div className="grid grid-cols-2 gap-8">
+                        <div>
+                            <h2 className="text-[17px] font-medium mb-4">Destinasi</h2>
+                            <ul className="space-y-2.5">
+                                {destinations.map((name) => (
+                                    <li key={name}>
+                                        <a href="#paket" className="text-[17px] text-mute hover:text-midnight transition-colors">{name}</a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div>
+                            <h2 className="text-[17px] font-medium mb-4">Kontak</h2>
+                            <ul className="space-y-2.5">
+                                {contacts.map((line) => (
+                                    <li key={line} className="text-[17px] text-mute">{line}</li>
+                                ))}
+                            </ul>
                         </div>
                     </div>
+                </div>
+
+                <div className="mt-14 sm:mt-20 pt-6 border-t border-hairline flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm text-mute">
+                    <p>&copy; {new Date().getFullYear()} Roamer.id. Semua hak dilindungi.</p>
+                    <div className="flex items-center gap-6">
+                        <span>Kebijakan Privasi</span>
+                        <span>Syarat &amp; Ketentuan</span>
+                    </div>
+                </div>
+
+                <div className="mt-10 sm:mt-16 flex items-center justify-between gap-2 overflow-hidden pb-6 sm:pb-8" aria-hidden="true">
+                    <span className="t-display text-[clamp(3.6rem,17vw,15rem)] leading-[0.9]">Roamer</span>
+                    <Plane className="w-[clamp(1.75rem,6vw,5rem)] shrink-0 text-midnight" />
+                    <span className="t-display text-[clamp(3.6rem,17vw,15rem)] leading-[0.9] text-primary">.id</span>
                 </div>
             </div>
         </footer>
